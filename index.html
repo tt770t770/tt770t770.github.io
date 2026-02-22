@@ -1,16 +1,244 @@
 <!DOCTYPE html>
-<html lang="he">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>HTML</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <h1>שיעור ראשון כותרת 1</h1>
-    <h2>2 הדגמה של כותרת</h2>
-    <h3>הדגמה של כותרת 3</h3>
-    <h4>4 הדגמה של כותרת</h4>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt!</p>
-  </body>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>מחשבון גמטריה</title>
+
+  <style>
+    /* רקע כללי */
+    body {
+      margin: 0;
+      background: linear-gradient(to bottom right, #ebf2ff, #dbe4ff);
+      font-family: Arial, sans-serif;
+      direction: rtl;
+    }
+
+    /* קונטיינר מרכזי */
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 30px;
+    }
+
+    /* כרטיס */
+    .card {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    /* טקסט עליון */
+    .title {
+      text-align: center;
+      font-size: 36px;
+      color: #3b3c8b;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #555;
+      margin-bottom: 25px;
+    }
+
+    /* שדה טקסט */
+    .input-label {
+      font-size: 18px;
+      font-weight: bold;
+      color: #444;
+      margin-bottom: 8px;
+    }
+
+    .input-box {
+      width: 100%;
+      font-size: 20px;
+      padding: 12px;
+      border: 2px solid #c3c6ff;
+      border-radius: 10px;
+      outline: none;
+      transition: 0.2s;
+    }
+    .input-box:focus {
+      border-color: #5861d3;
+    }
+
+    /* כפתור */
+    .btn {
+      width: 100%;
+      background: #4b4fc4;
+      color: white;
+      padding: 14px;
+      font-size: 20px;
+      border: none;
+      border-radius: 12px;
+      margin-top: 15px;
+      cursor: pointer;
+      transition: 0.2s;
+      font-weight: bold;
+    }
+    .btn:hover {
+      background: #3d42b0;
+    }
+
+    /* תוצאה כללית */
+    .total-box {
+      background: linear-gradient(to right, #4b4fc4, #6c30b5);
+      color: white;
+      padding: 20px;
+      border-radius: 12px;
+      margin-top: 25px;
+      text-align: center;
+    }
+
+    .total-box .label {
+      font-size: 20px;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    .total-box .value {
+      font-size: 50px;
+      font-weight: bold;
+    }
+
+    /* גריד האותיות */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .grid-item {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 15px;
+      text-align: center;
+      border: 1px solid #ddd;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    }
+
+    .grid-item .letter {
+      font-size: 26px;
+      font-weight: bold;
+      color: #4b4fc4;
+    }
+
+    .grid-item .val {
+      color: #666;
+      margin-top: 4px;
+      font-size: 15px;
+    }
+
+    /* details (מידע נוסף) */
+    details {
+      margin-top: 25px;
+      font-size: 14px;
+      color: #555;
+    }
+
+    summary {
+      cursor: pointer;
+      font-weight: bold;
+    }
+    summary:hover {
+      color: #4b4fc4;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <div class="card">
+
+      <div class="title">מחשבון גמטריה</div>
+      <div class="subtitle">הזן מילה או משפט בעברית וחשב את הערך הגמטרי</div>
+
+      <!-- שדה טקסט -->
+      <label class="input-label">הכנס טקסט:</label>
+      <input id="textInput" class="input-box" placeholder="לדוגמה: שלום עולם" />
+
+      <button class="btn" onclick="calculate()">חשב גמטריה</button>
+
+      <!-- תוצאה תופיע כאן -->
+      <div id="result"></div>
+
+      <details>
+        <summary>מידע על גמטריה</summary>
+        <p>
+          גמטריה היא שיטה המעניקה ערך מספרי לכל אות עברית.
+          השיטה משמשת ללימוד, פרשנות וקישור בין מילים.
+        </p>
+      </details>
+    </div>
+  </div>
+
+  <script>
+    // טבלת הערכים העבריים
+    const GEMATRIA = {
+      'א': 1, 'ב': 2, 'ג': 3, 'ד': 4, 'ה': 5, 'ו': 6, 'ז': 7, 'ח': 8, 'ט': 9,
+      'י': 10, 'כ': 20, 'ך': 20, 'ל': 30, 'מ': 40, 'ם': 40, 'נ': 50, 'ן': 50,
+      'ס': 60, 'ע': 70, 'פ': 80, 'ף': 80, 'צ': 90, 'ץ': 90,
+      'ק': 100, 'ר': 200, 'ש': 300, 'ת': 400
+    };
+
+    // חישוב גמטריה
+    function calculate() {
+      const text = document.getElementById("textInput").value.trim();
+      const resultBox = document.getElementById("result");
+
+      if (!text) {
+        resultBox.innerHTML = "";
+        return;
+      }
+
+      let total = 0;
+      let breakdown = [];
+
+      for (let ch of text) {
+        if (GEMATRIA[ch]) {
+          total += GEMATRIA[ch];
+          breakdown.push({ char: ch, value: GEMATRIA[ch] });
+        }
+      }
+
+      if (breakdown.length === 0) {
+        resultBox.innerHTML = "<p>לא נמצאו אותיות עבריות.</p>";
+        return;
+      }
+
+      // בניית תיבת התוצאה
+      let html = `
+        <div class="total-box">
+          <div class="label">הערך הגמטרי הכולל:</div>
+          <div class="value">${total}</div>
+        </div>
+
+        <div class="grid">
+      `;
+
+      breakdown.forEach(item => {
+        html += `
+          <div class="grid-item">
+            <div class="letter">${item.char}</div>
+            <div class="val">${item.value}</div>
+          </div>
+        `;
+      });
+
+      html += "</div>";
+
+      resultBox.innerHTML = html;
+    }
+
+    // תמיכה בלחיצה על Enter
+    document.getElementById("textInput").addEventListener("keypress", e => {
+      if (e.key === "Enter") calculate();
+    });
+  </script>
+
+</body>
 </html>
